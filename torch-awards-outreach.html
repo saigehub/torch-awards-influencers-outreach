@@ -1,0 +1,1094 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Torch Awards — Outreach Command Center</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  
+  :root {
+    --flame: #C8390A;
+    --gold: #B8922A;
+    --charcoal: #1A1A1A;
+    --smoke: #2C2C2C;
+    --ash: #3D3D3D;
+    --offwhite: #F5F0E8;
+    --cream: #EDE8DC;
+    --muted: #9A9280;
+    --accent: #D4A843;
+  }
+
+  body {
+    font-family: 'Georgia', serif;
+    background: var(--charcoal);
+    color: var(--offwhite);
+    min-height: 100vh;
+  }
+
+  header {
+    background: linear-gradient(135deg, var(--smoke) 0%, #1a1208 100%);
+    border-bottom: 2px solid var(--gold);
+    padding: 28px 40px 20px;
+  }
+
+  .header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .event-title {
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 6px;
+  }
+
+  h1 {
+    font-size: 28px;
+    color: var(--offwhite);
+    font-weight: normal;
+    letter-spacing: 1px;
+  }
+
+  .event-meta {
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 4px;
+    font-style: italic;
+  }
+
+  .stats-row {
+    display: flex;
+    gap: 32px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+  }
+
+  .stat {
+    text-align: center;
+  }
+
+  .stat-num {
+    font-size: 22px;
+    color: var(--accent);
+    font-weight: bold;
+  }
+
+  .stat-label {
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .main {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 32px 24px;
+  }
+
+  /* Tabs */
+  .tabs {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 28px;
+    border-bottom: 1px solid var(--ash);
+    padding-bottom: 0;
+    flex-wrap: wrap;
+  }
+
+  .tab {
+    padding: 10px 20px;
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    transition: all 0.2s;
+    font-family: Georgia, serif;
+    background: none;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+  }
+
+  .tab:hover { color: var(--offwhite); }
+  .tab.active {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+  }
+
+  .panel { display: none; }
+  .panel.active { display: block; }
+
+  /* Category headers */
+  .category-block {
+    margin-bottom: 40px;
+  }
+
+  .cat-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  .cat-label {
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: bold;
+  }
+
+  .cat-count {
+    background: var(--ash);
+    color: var(--muted);
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 10px;
+  }
+
+  .cat-line {
+    flex: 1;
+    height: 1px;
+    background: var(--ash);
+  }
+
+  /* Cards */
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 14px;
+  }
+
+  .card {
+    background: var(--smoke);
+    border: 1px solid var(--ash);
+    border-radius: 6px;
+    padding: 16px 18px;
+    transition: border-color 0.2s;
+    position: relative;
+  }
+
+  .card:hover { border-color: var(--gold); }
+
+  .card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 8px;
+  }
+
+  .handle {
+    font-size: 14px;
+    color: var(--offwhite);
+    font-weight: bold;
+  }
+
+  .handle a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .handle a:hover { color: var(--accent); }
+
+  .followers {
+    font-size: 11px;
+    color: var(--accent);
+    font-weight: bold;
+    white-space: nowrap;
+  }
+
+  .card-name {
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 6px;
+    font-style: italic;
+  }
+
+  .card-why {
+    font-size: 12px;
+    color: #b0a898;
+    line-height: 1.5;
+    margin-bottom: 10px;
+  }
+
+  .card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .geo-tag {
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  .status-select {
+    font-size: 10px;
+    background: var(--ash);
+    color: var(--offwhite);
+    border: none;
+    border-radius: 3px;
+    padding: 3px 6px;
+    cursor: pointer;
+    font-family: Georgia, serif;
+  }
+
+  .new-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: var(--flame);
+    color: white;
+    font-size: 9px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 2px 6px;
+    border-radius: 3px;
+  }
+
+  /* Messages panel */
+  .msg-block {
+    background: var(--smoke);
+    border: 1px solid var(--ash);
+    border-radius: 6px;
+    margin-bottom: 20px;
+    overflow: hidden;
+  }
+
+  .msg-header {
+    background: var(--ash);
+    padding: 12px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .msg-tier {
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+
+  .msg-copy-btn {
+    background: var(--flame);
+    color: white;
+    border: none;
+    padding: 5px 14px;
+    font-size: 10px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    border-radius: 3px;
+    cursor: pointer;
+    font-family: Georgia, serif;
+    transition: opacity 0.2s;
+  }
+
+  .msg-copy-btn:hover { opacity: 0.85; }
+  .msg-copy-btn.copied { background: #2a7a2a; }
+
+  .msg-body {
+    padding: 20px 24px;
+  }
+
+  .msg-who {
+    font-size: 11px;
+    color: var(--muted);
+    margin-bottom: 10px;
+    letter-spacing: 1px;
+  }
+
+  .msg-text {
+    font-size: 14px;
+    line-height: 1.8;
+    color: var(--offwhite);
+    white-space: pre-wrap;
+    border-left: 2px solid var(--gold);
+    padding-left: 16px;
+  }
+
+  .msg-note {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 12px;
+    font-style: italic;
+  }
+
+  /* Missing section */
+  .missing-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 12px;
+  }
+
+  .missing-card {
+    background: var(--smoke);
+    border: 1px dashed var(--ash);
+    border-radius: 6px;
+    padding: 14px 16px;
+  }
+
+  .missing-cat {
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--flame);
+    margin-bottom: 6px;
+  }
+
+  .missing-desc {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  .missing-examples {
+    font-size: 11px;
+    color: #7a7060;
+    margin-top: 6px;
+    font-style: italic;
+  }
+
+  /* Filter bar */
+  .filter-bar {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+
+  .filter-btn {
+    padding: 6px 14px;
+    font-size: 11px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    background: var(--ash);
+    color: var(--muted);
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    font-family: Georgia, serif;
+    transition: all 0.2s;
+  }
+
+  .filter-btn:hover, .filter-btn.active {
+    background: var(--gold);
+    color: var(--charcoal);
+  }
+
+  .section-note {
+    font-size: 12px;
+    color: var(--muted);
+    font-style: italic;
+    margin-bottom: 24px;
+    line-height: 1.6;
+    border-left: 2px solid var(--ash);
+    padding-left: 14px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-top">
+    <div>
+      <div class="event-title">BBB SEFL — Torch Awards</div>
+      <h1>Outreach Command Center</h1>
+      <div class="event-meta">June 25 · Broward Center of Innovation at NSU · Miami-Dade & Broward</div>
+    </div>
+  </div>
+  <div class="stats-row">
+    <div class="stat">
+      <div class="stat-num" id="total-count">28</div>
+      <div class="stat-label">Total Targets</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">10</div>
+      <div class="stat-label">Your List</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">18</div>
+      <div class="stat-label">Added</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">5</div>
+      <div class="stat-label">Message Variants</div>
+    </div>
+  </div>
+</header>
+
+<div class="main">
+
+  <div class="tabs">
+    <button class="tab active" onclick="showPanel('targets')">Target List</button>
+    <button class="tab" onclick="showPanel('messages')">Messages</button>
+    <button class="tab" onclick="showPanel('gaps')">What's Missing</button>
+  </div>
+
+  <!-- TARGETS PANEL -->
+  <div id="targets" class="panel active">
+
+    <p class="section-note">
+      Your 10 original accounts marked with no badge. 18 researched additions marked <strong style="color:var(--flame)">NEW</strong>. 
+      Organized by the factors that actually matter for conversion — reach, room relevance, and relationship proximity.
+    </p>
+
+    <!-- AMPLIFIERS -->
+    <div class="category-block">
+      <div class="cat-header">
+        <span class="cat-label">Amplifiers — Media & Content</span>
+        <span class="cat-count">8</span>
+        <div class="cat-line"></div>
+      </div>
+      <div class="cards-grid">
+
+        <div class="card">
+          <div class="card-top">
+            <div class="handle"><a href="https://instagram.com/sfbjnews" target="_blank">@sfbjnews</a></div>
+            <div class="followers">42.4K</div>
+          </div>
+          <div class="card-name">South Florida Business Journal</div>
+          <div class="card-why">Tri-county business news. Torch coverage from them = institutional credibility signal.</div>
+          <div class="card-footer">
+            <span class="geo-tag">Miami-Dade · Broward · PB</span>
+            <select class="status-select"><option>Not Sent</option><option>Sent</option><option>Responded</option><option>Confirmed</option></select>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-top">
+            <div class="handle"><a href="https://instagram.com/thebrowardscene" target="_blank">@thebrowardscene</a></div>
+            <div class="followers">250K</div>
+          </div>
+          <div class="card-name">The Broward Scene</div>
+          <div class="card-why">Highest reach on your list. Broward-embedded events audience. Direct match for the room.</div>
+          <div class="card-footer">
+            <span class="geo-tag">Broward</span>
+            <select class="status-select"><option>Not Sent</option><option>Sent</option><option>Responded</option><option>Confirmed</option></select>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-top">
+            <div class="handle"><a href="https://instagram.com/floridaoftomorrow" target="_blank">@floridaoftomorrow</a></div>
+            <div class="followers">108K</div>
+          </div>
+          <div class="card-name">Florida of Tomorrow</div>
+          <div class="card-why">Brand story platform reaching millions monthly. Torch = exactly the story they tell.</div>
+          <div class="card-footer">
+            <span class="geo-tag">Statewide / WPB</span>
+            <select class="status-select"><option>Not Sent</option><option>Sent</option><option>Responded</option><option>Confirmed</option></select>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="new-badge">NEW</div>
+          <div class="card-top">
+            <div class="handle"><a href="https://instagram.com/bizjournalsmiami" target="_blank">@bizjournalsmiami</a></div>
+            <div class="followers">~15K</div>
+          </div>
+          <div class="card-name">Bizjournal Miami / South Florida</div>
+          <div class="card-why">Business press coverage. Media partnership angle. Can pitch as press access not just attendance.</div>
+          <div class="card-footer">
+            <span class="geo-tag">Miami-Dade</span>
+            <select class="status-select"><option>Not Sent</option><option>Sent</option><option>Responded</option><option>Confirmed</option></select>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="new-badge">NEW</div>
+          <div class="card-top">
+            <div class="handle"><a href="https://instagram.com/refreshmiami" target="_blank">@refreshmiami</a></div>
+            <div class="followers">~8K</div>
+          </div>
+          <div class="card-name">Refresh Miami</div>
+          <div class="card-why">Tech & startup community hub. Pulls founders, investors, developers. Untapped Torch audience.</div>
+          <div class="card-footer">
+            <span class="geo-tag">Miami-Dade</span>
+            <select class="status-select"><option>Not Sent</option><option>Sent</option><option>Responded</option><option>Confirmed</option></select>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="new-badge">NEW</div>
+          <div class="card-top">
+            <div class="handle"><a href="https://instagram.com/miaminewtimes" target="_blank">@miaminewtimes</a></div>
+            <div class="followers">~85K</div>
+          </div>
+          <div class="card-name">Miami New Times</div>
+          <div class="card-why">Culture + business crossover. Event coverage reach is strong. Alternative credibility signal.</div>
+          <div class="card-footer">
+            <span class="geo-tag">Miami-Dade</span>
+            <select class="status-select"><option>Not Sent</option><option>Sent</option><option>Responded</option><option>Confirmed</option></select>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="new-badge">NEW</div>
+          <div class="card-top">
+            <div class="handle"><a href="https://instagram.com/sunsentinel" target="_blank">@sunsentinel</a></div>
+            <div class="followers">~40K</div>
+          </div>
+          <div class="card-name">Sun Sentinel</div>
+          <div class="card-why">Broward's paper of record. Press angle. A mention here moves the whole room's perception.</div>
+          <div class="card-footer">
+            <span class="geo-tag">Broward</span>
+            <select class="status-select"><option>Not Sent</option><option>Sent</option><option>Responded</option><option>Confirmed</option></select>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="new-badge">NEW</div>
+          <div class="card-top">
+            <div class="handle"><a href="https://instagram.com/goldcoastntwrk" target="_blank">@goldcoastntwrk</a></div>
+            <div class="followers">1.3K</div>
+          </div>
+          <div class="card-name">Gold Coast Network</div>
+          <div class="card-why">Early-stage but the right niche — South Florida business + culture. Strategic relationship to build now.</div>
+          <div class="card-footer">
+            <span class="geo-tag">South Florida</span>
+            <select class="status-select"><option>Not Sent</option><option>Sent</option><option>Responded</option><option>Confirmed</option></select>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- LIFESTYLE / CULTURE -->
+    <div class="category-block">
+      <div class="cat-header">
+        <span class="cat-label">Lifestyle & Culture Creators</span>
+        <span class="cat-count">6</span>
+        <div class="cat-line"></div>
+      </div>
+      <div class="cards-grid">
+
+        <div class="card">
+          <div class="card-top">
+            <div class="handle"><a href="https://instagram.com/ggthriveGuide" target="_blank">@ggthriveguide</a></div>
+            <div class="followers">37.2K</div>
+          </div>
+          <div class="card-name">Gernise — Miami Influencer</div>
+          <div class="card-why">Food, travel, culture. Broward/Palm Beach coverage. Miami Mayor-awarded. Maycee already follows — warm path.</div>
+          <div class="card-footer">
+            <span class="geo-tag">Broward · Miami · PB</span>
+            <select class="status-select"><option>Not Sent</option><option>Sent</option><option>Responded</option><option>Confirmed</option></select>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-top">
+            <div class="handle"><a href="https://instagram.com/hardtocomplain" target="_blank">@hardtocomplain</a></div>
+            <div class="followers">18.7K</div>
+          </div>
+          <div class="card-name">Hard to Complain™</div>
+          <div class="card-why">South Florida lifestyle + local experiences. Viral content (295K views). Mindset-driven brand — aligns with Torch narrative.</div>
+          <div class="card-footer">
+            <span class="geo-tag">South Florida</span>
+            <select class="status-select"><option>Not Sent</option><option>Sent</option><option>Responded</option><option>Confirmed</option></select>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="new-badge">NEW</div>
+          <div class="card-top">
+            <div class="handle"><a href="https://instagram.com/thefortlauderdalelocal" target="_blank">@thefortlauderdalelocal</a></div>
+            <div class="followers">~25K</div>
+          </div>
+          <div class="card-name">The Fort Lauderdale Local</div>
+          <div class="card-why">Hyperlocal lifestyle content for Broward. Events + restaurants. Direct community penetration.</div>
+          <div class="card-footer">
+            <span class="geo-tag">Broward</span>
+            <select class="status-select"><option>Not Sent</option><option>Sent</option><option>Responded</option><option>Confirmed</option></select>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="new-badge">NEW</div>
+          <div class="card-top">
+            <div class="handle"><a href="https://instagram.com/miamionthecheap" target="_blank">@miamionthecheap</a></div>
+            <div class="followers">~30K</div>
+          </div>
+          <div class="card-name">Miami on the Cheap</div>
+          <div class="card-why">Value-conscious Miami audience. Events-forward. Reaches emerging professionals actively seeking rooms.</div>
+          <div class="card-footer">
+            <span class="geo-tag">Miami-Dade</span>
+            <select class="status-select"><option>Not Sent</option><option>Sent</option><option>Responded</option><option>Confirmed</option></select>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="new-badge">NEW</div>
+          <div class="card-top">
+            <div class="handle"><a href="https://instagram.com/blackinmiami" target="_blank">@blackinmiami</a></div>
+            <div class="followers">~20K</div>
+          </div>
+          <div class="card-name">Black in Miami</div>
+          <div class="card-why">Cultural connector. Pulls Black professionals, founders, creatives. Underrepresented in Torch rooms — strategic to activate.</div>
+          <div class="card-footer">
+            <span class="geo-tag">Miami-Dade</span>
+            <select class="status-select"><option>Not Sent</option><option>Sent</option><option>Responded</option><option>Confirmed</option></select>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="new-badge">NEW</div>
+          <div class="card-top">
+            <div class="handle"><a href="https://instagram.com/latinasinbusiness" target="_blank">@latinasinbusiness</a></div>
+            <div class="followers">~45K</div>
+          </div>
+          <div class="card-name">Latinas in Business</div>
+          <div class="card-why">Entrepreneurship + culture. Strong South Florida base. Pulls exactly the demographic the room needs more of.</div>
+          <div class="card-footer">
+            <span class="geo-tag">South Florida</span>
+            <select class="status-select"><option>Not Sent</option><option>Sent</option><option>Responded</option><option>Confirmed</option></select>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- SEEKERS / ENTREPRENEURS -->
+    <div class="category-block">
+      <div class="cat-header">
+        <span class="cat-label">Seekers — Founders & Emerging Entrepreneurs</span>
+        <span class="cat-count">5</span>
+        <div class="cat-line"></div>
+      </div>
+      <div class="cards-grid">
+
+        <div class="card">
+          <div class="new-badge">NEW</div>
+          <div class="card-top">
+            <div class="handle"><a href="https://instagram.com/blacktechweek" target="_blank">@blacktechweek</a></div>
+            <div class="followers">~12K</div>
+          </div>
+          <div class="card-name">Black Tech Week</div>
+          <div class="card-why">Miami-born. Founders, investors, developers. The Torch room is exactly what their audience is seeking access to.</div>
+          <div class="card-footer">
+            <span class="geo-tag">Miami-Dade</span>
+            <select class="status-select"><option>Not Sent</option><option>Sent</option><option>Responded</option><option>Confirmed</option></select>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="new-badge">NEW</div>
+          <div class="card-top">
+            <div class="handle"><a href="https://instagram.com/sidehustlemiami" target="_blank">@sidehustlemiami</a></div>
+            <div class="followers">~18K</div>
+          </div>
+          <div class="card-name">Side Hustle Miami</div>
+          <div class="card-why">Aspiring founders, small business. Torch credibility is aspirational for this audience — and BBB is their trust layer.</div>
+          <div class="card-footer">
+            <span class="geo-tag">Miami-Dade</span>
+            <select class="status-select"><option>Not Sent</option><option>Sent</option><option>Responded</option><option>Confirmed</option></select>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="new-badge">NEW</div>
+          <div class="card-top">
+            <div class="handle"><a href="https://instagram.com/miamifounderscircle" target="_blank">@miamifounderscircle</a></div>
+            <div class="followers">~6K</div>
+          </div>
+          <div class="card-name">Miami Founders Circle</div>
+          <div class="card-why">Early-stage but the right room. Investors and founders. Torch = ideal next step in their ecosystem journey.</div>
+          <div class="card-footer">
+            <span class="geo-tag">Miami-Dade</span>
+            <select class="status-select"><option>Not Sent</option><option>Sent</option><option>Responded</option><option>Confirmed</option></select>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="new-badge">NEW</div>
+          <div class="card-top">
+            <div class="handle"><a href="https://instagram.com/browardcountysmallbiz" target="_blank">@browardcountysmallbiz</a></div>
+            <div class="followers">~5K</div>
+          </div>
+          <div class="card-name">Broward County Small Business</div>
+          <div class="card-why">Institutional but community-facing. Warm overlap with BBB network. Mutual-interest message, not cold outreach.</div>
+          <div class="card-footer">
+            <span class="geo-tag">Broward</span>
+            <select class="status-select"><option>Not Sent</option><option>Sent</option><option>Responded</option><option>Confirmed</option></select>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="new-badge">NEW</div>
+          <div class="card-top">
+            <div class="handle"><a href="https://instagram.com/kevinolearytv" target="_blank">@kevinolearytv</a></div>
+            <div class="followers">2.2M</div>
+          </div>
+          <div class="card-name">Kevin O'Leary</div>
+          <div class="card-why">Long shot but worth the swing. South Florida connections + entrepreneurship angle. Even a story mention is leverage.</div>
+          <div class="card-footer">
+            <span class="geo-tag">National / Miami adjacent</span>
+            <select class="status-select"><option>Not Sent</option><option>Sent</option><option>Responded</option><option>Confirmed</option></select>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- CREDIBILITY ANCHORS -->
+    <div class="category-block">
+      <div class="cat-header">
+        <span class="cat-label">Credibility Anchors — Athletes & Multi-Hyphenates</span>
+        <span class="cat-count">3</span>
+        <div class="cat-line"></div>
+      </div>
+      <div class="cards-grid">
+
+        <div class="card">
+          <div class="card-top">
+            <div class="handle"><a href="https://instagram.com/nikkihaimes" target="_blank">@nikkihaimes</a></div>
+            <div class="followers">11.3K</div>
+          </div>
+          <div class="card-name">Nikki Haimes — US Beach Soccer</div>
+          <div class="card-why">Athlete + entrepreneur + host. South Florida embedded. soflo.fc connection. Warms the room aesthetically.</div>
+          <div class="card-footer">
+            <span class="geo-tag">South Florida</span>
+            <select class="status-select"><option>Not Sent</option><option>Sent</option><option>Responded</option><option>Confirmed</option></select>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-top">
+            <div class="handle"><a href="https://instagram.com/ke.kween" target="_blank">@ke.kween</a></div>
+            <div class="followers">37.6K</div>
+          </div>
+          <div class="card-name">Ke — Model / Actress / Entrepreneur</div>
+          <div class="card-why">5.5M views. Multi-hyphenate with business angle. Pulls aspirational creative-entrepreneur crossover audience.</div>
+          <div class="card-footer">
+            <span class="geo-tag">South Florida</span>
+            <select class="status-select"><option>Not Sent</option><option>Sent</option><option>Responded</option><option>Confirmed</option></select>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="new-badge">NEW</div>
+          <div class="card-top">
+            <div class="handle"><a href="https://instagram.com/ftlauderdale_utd" target="_blank">@ftlauderdale_utd</a></div>
+            <div class="followers">~8K</div>
+          </div>
+          <div class="card-name">Fort Lauderdale United FC</div>
+          <div class="card-why">Existing BBB relationship. Community anchor in Broward. Cross-brand activation — already in your ecosystem.</div>
+          <div class="card-footer">
+            <span class="geo-tag">Broward</span>
+            <select class="status-select"><option>Not Sent</option><option>Sent</option><option>Responded</option><option>Confirmed</option></select>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- INSTITUTIONAL CONNECTORS -->
+    <div class="category-block">
+      <div class="cat-header">
+        <span class="cat-label">Institutional Connectors — Orgs & Networks</span>
+        <span class="cat-count">6</span>
+        <div class="cat-line"></div>
+      </div>
+      <div class="cards-grid">
+
+        <div class="card">
+          <div class="card-top">
+            <div class="handle"><a href="https://instagram.com/beaconcouncil" target="_blank">@beaconcouncil</a></div>
+            <div class="followers">5.8K</div>
+          </div>
+          <div class="card-name">Miami-Dade Beacon Council</div>
+          <div class="card-why">Miami-Dade's official economic development partner. You're already following them. Reciprocal relationship play.</div>
+          <div class="card-footer">
+            <span class="geo-tag">Miami-Dade</span>
+            <select class="status-select"><option>Not Sent</option><option>Sent</option><option>Responded</option><option>Confirmed</option></select>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="new-badge">NEW</div>
+          <div class="card-top">
+            <div class="handle"><a href="https://instagram.com/greaterftlauderdale" target="_blank">@greaterftlauderdale</a></div>
+            <div class="followers">~22K</div>
+          </div>
+          <div class="card-name">Greater Fort Lauderdale Alliance</div>
+          <div class="card-why">Broward's economic development org. Perfect Torch alignment. They move the same rooms.</div>
+          <div class="card-footer">
+            <span class="geo-tag">Broward</span>
+            <select class="status-select"><option>Not Sent</option><option>Sent</option><option>Responded</option><option>Confirmed</option></select>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="new-badge">NEW</div>
+          <div class="card-top">
+            <div class="handle"><a href="https://instagram.com/miamibeachbiz" target="_blank">@miamibeachbiz</a></div>
+            <div class="followers">~10K</div>
+          </div>
+          <div class="card-name">Miami Beach Chamber / Biz</div>
+          <div class="card-why">Already follows GG Thrive. Chamber-adjacent warm signal. Cross-pollination opportunity with their member base.</div>
+          <div class="card-footer">
+            <span class="geo-tag">Miami-Dade</span>
+            <select class="status-select"><option>Not Sent</option><option>Sent</option><option>Responded</option><option>Confirmed</option></select>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="new-badge">NEW</div>
+          <div class="card-top">
+            <div class="handle"><a href="https://instagram.com/nsunews" target="_blank">@nsunews</a></div>
+            <div class="followers">~15K</div>
+          </div>
+          <div class="card-name">Nova Southeastern University</div>
+          <div class="card-why">The event is ON their campus. NSU has reach into faculty, alumni, and the business community. Co-host energy.</div>
+          <div class="card-footer">
+            <span class="geo-tag">Broward</span>
+            <select class="status-select"><option>Not Sent</option><option>Sent</option><option>Responded</option><option>Confirmed</option></select>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="new-badge">NEW</div>
+          <div class="card-top">
+            <div class="handle"><a href="https://instagram.com/score_mentors" target="_blank">@score_mentors</a></div>
+            <div class="followers">~20K</div>
+          </div>
+          <div class="card-name">SCORE South Florida</div>
+          <div class="card-why">Free mentorship for small businesses. Volunteer base of executives. Pulls founders who are already BBB-adjacent.</div>
+          <div class="card-footer">
+            <span class="geo-tag">South Florida</span>
+            <select class="status-select"><option>Not Sent</option><option>Sent</option><option>Responded</option><option>Confirmed</option></select>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="new-badge">NEW</div>
+          <div class="card-top">
+            <div class="handle"><a href="https://instagram.com/sfbdc" target="_blank">@sfbdc</a></div>
+            <div class="followers">~8K</div>
+          </div>
+          <div class="card-name">South Florida Black Development Coalition</div>
+          <div class="card-why">Black-owned business advocacy. Strategic diversity signal for Torch. Pulls founders who need to be in this room.</div>
+          <div class="card-footer">
+            <span class="geo-tag">Miami-Dade · Broward</span>
+            <select class="status-select"><option>Not Sent</option><option>Sent</option><option>Responded</option><option>Confirmed</option></select>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+  <!-- END TARGETS PANEL -->
+
+  <!-- MESSAGES PANEL -->
+  <div id="messages" class="panel">
+
+    <p class="section-note">
+      Two factors drive the message: <strong>what they value</strong> and <strong>what the room gives them</strong>. 
+      Not every message mentions BBB. Not every message mentions awards. The hook is always the room, the lunch, and the access.
+    </p>
+
+    <!-- MSG 1: MEDIA -->
+    <div class="msg-block">
+      <div class="msg-header">
+        <span class="msg-tier">For Media & Content Amplifiers</span>
+        <button class="msg-copy-btn" onclick="copyMsg(this, 'msg1')">Copy</button>
+      </div>
+      <div class="msg-body">
+        <div class="msg-who">@sfbjnews · @thebrowardscene · @floridaoftomorrow · @sunsentinel · @miaminewtimes</div>
+        <div class="msg-text" id="msg1">Hey [Name] — on June 25 we're hosting the Torch Awards at the Broward Center of Innovation at NSU. It's the region's top business ethics recognition — executives, founders, and institutional leaders across Miami-Dade and Broward in one room.
+
+We'd love to have you there as a media partner. Complimentary lunch is on us. If you want to bring someone, I have a promo code for two tickets.
+
+Event details here: [LINK]
+
+Let me know if this is something worth putting on your radar.</div>
+        <div class="msg-note">Keep it peer-level. You're inviting them in, not pitching to them. The "media partner" framing earns more than "influencer."</div>
+      </div>
+    </div>
+
+    <!-- MSG 2: LIFESTYLE -->
+    <div class="msg-block">
+      <div class="msg-header">
+        <span class="msg-tier">For Lifestyle & Culture Creators</span>
+        <button class="msg-copy-btn" onclick="copyMsg(this, 'msg2')">Copy</button>
+      </div>
+      <div class="msg-body">
+        <div class="msg-who">@ggthriveguide · @hardtocomplain · @thefortlauderdalelocal · @blackinmiami · @latinasinbusiness</div>
+        <div class="msg-text" id="msg2">Hey [Name] — June 25 we're hosting the Torch Awards at Nova Southeastern University in Broward. Think South Florida's top business leaders, founders, and executives — all in one room for an afternoon.
+
+Lunch is on us. If you want to bring a friend, I have a promo code for two tickets.
+
+Figured this could be a great room for you — both for content and for the connections.
+
+Details: [LINK]</div>
+        <div class="msg-note">Lead with the room, not the award. "Content and connections" speaks their language without being transactional.</div>
+      </div>
+    </div>
+
+    <!-- MSG 3: SEEKERS -->
+    <div class="msg-block">
+      <div class="msg-header">
+        <span class="msg-tier">For Founders & Emerging Entrepreneurs</span>
+        <button class="msg-copy-btn" onclick="copyMsg(this, 'msg3')">Copy</button>
+      </div>
+      <div class="msg-body">
+        <div class="msg-who">@blacktechweek · @sidehustlemiami · @miamifounderscircle · @refreshmiami</div>
+        <div class="msg-text" id="msg3">Hey [Name] — wanted to put this on your radar.
+
+June 25, we're hosting the BBB Torch Awards at the Broward Center of Innovation at NSU. It's our annual recognition for the region's most ethical and impactful businesses — and the room pulls executives, investors, and founders from across Miami-Dade and Broward.
+
+Lunch is covered. I have a promo code for you and a guest if you want in.
+
+Info here: [LINK]
+
+Worth the afternoon.</div>
+        <div class="msg-note">"Worth the afternoon" closes with confidence, not desperation. The investor mention is intentional — it's what this audience is listening for.</div>
+      </div>
+    </div>
+
+    <!-- MSG 4: ATHLETES / ANCHORS -->
+    <div class="msg-block">
+      <div class="msg-header">
+        <span class="msg-tier">For Athletes & Multi-Hyphenate Credibility Anchors</span>
+        <button class="msg-copy-btn" onclick="copyMsg(this, 'msg4')">Copy</button>
+      </div>
+      <div class="msg-body">
+        <div class="msg-who">@nikkihaimes · @ke.kween · @ftlauderdale_utd</div>
+        <div class="msg-text" id="msg4">Hey [Name] — June 25 we're doing the Torch Awards at NSU's Center of Innovation in Broward. It's our annual recognition for the region's top businesses — the room is executives, founders, and decision-makers from across South Florida.
+
+Lunch is on us. I've got a promo code for you and a guest if you want to come through.
+
+Thought this could be a dope room for you given everything you're building.
+
+[LINK]</div>
+        <div class="msg-note">"Everything you're building" signals you actually know who they are. Minimal but specific — no overexplaining.</div>
+      </div>
+    </div>
+
+    <!-- MSG 5: INSTITUTIONAL -->
+    <div class="msg-block">
+      <div class="msg-header">
+        <span class="msg-tier">For Institutional Connectors & Orgs</span>
+        <button class="msg-copy-btn" onclick="copyMsg(this, 'msg5')">Copy</button>
+      </div>
+      <div class="msg-body">
+        <div class="msg-who">@beaconcouncil · @greaterftlauderdale · @nsunews · @score_mentors · @sfbdc</div>
+        <div class="msg-text" id="msg5">Hi [Name/Organization] — we'd love to extend a personal invitation to the BBB SEFL Torch Awards on June 25 at the Broward Center of Innovation at NSU.
+
+This is our annual recognition for businesses that exemplify marketplace trust and ethical leadership across Miami-Dade, Broward, and the Caribbean. The room draws executives, civic leaders, and founders from across the region.
+
+Complimentary lunch included. We also have a promo code available if you'd like to bring a representative or guest.
+
+Full event details: [LINK]
+
+We'd value having your organization in the room.</div>
+        <div class="msg-note">Slightly more formal — these orgs have gatekeepers. "We'd value having your organization in the room" positions you as peer, not petitioner.</div>
+      </div>
+    </div>
+
+  </div>
+  <!-- END MESSAGES PANEL -->
+
+  <!-- GAPS PANEL -->
+  <div id="gaps" class="panel">
+
+    <p class="section-note">
+      These are the niches your current list doesn't cover. Some are quick finds. Some require deeper research. 
+      Prioritized by room impact — not just follower count.
+    </p>
+
+    <div class="missing-grid">
+
+      <div class="missing-card">
+        <div class="missing-cat">🔴 High Priority</div>
+        <div class="missing-desc">Commercial Real Estate & Development</div>
+        <div class="missing-examples">Broward and Miami-Dade developers, CRE brokers with personal brands. They have money and want to be seen.</div>
+      </div>
+
+      <div class="missing-card">
+        <div class="missing-cat">🔴 High Priority</div>
+        <div class="missing-desc">Haitian & Caribbean Business Community</div>
+        <div class="missing-examples">BBB serves the Caribbean. This audience is underrepresented in Torch rooms and deeply entrepreneurial. Find their connectors.</div>
+      </div>
+
+      <div class="missing-card">
+        <div class="missing-cat">🔴 High Priority</div>
+        <div class="missing-desc">Healthcare Entrepreneurs</div>
+        <div class="missing-examples">Med spas, telehealth founders, concierge medicine — South Florida is dense with them. High income, community-connected.</div>
+      </div>
+
+      <div class="missing-card">
+        <div class="missing-cat">🟡 Medium Priority</div>
+        <div class="missing-desc">Legal & Financial Professionals w/ Public Presence</div>
+        <div class="missing-examples">CPAs, attorneys, financial advisors with Instagram presence. They send clients to Torch-type events.</div>
+      </div>
+
+      <div class="missing-card">
+        <div class="missing-cat">🟡 Medium Priority</div>
+        <div class="missing-desc">Hospitality & F&B Operators</div>
+        <div class="missing-examples">Restaurant groups, venue owners, catering brands. They advertise at events. Mutual interest in the room.</div>
+      </div>
+
+      <div class="missing-card">
+        <div class="missing-cat">🟡 Medium Priority</div>
+        <div class="missing-desc">Faith & Community Connectors</div>
+        <div class="missing-examples">Underestimated in Miami/Broward. Large Black and Caribbean churches move rooms. One relationship = many attendees.</div>
+      </div>
+
+      <div class="missing-card">
+        <div class="missing-cat">🟡 Medium Priority</div>
+        <div class="missing-desc">Women Entrepreneur Networks</div>
+        <div class="missing-examples">NAWBO South Florida, Women's Business Enterprise. Female founders are underrepresented in Torch awareness.</div>
+      </div>
+
+      <div class="missing-card">
+        <div class="missing-cat">🟢 Opportunistic</div>
+        <div class="missing-desc">Podcast Hosts with South FL Focus</div>
+        <div class="missing-examples">Business, entrepreneurship, culture pods. A Torch mention in an episode is evergreen reach.</div>
+      </div>
+
+    </div>
+
+  </div>
+  <!-- END GAPS PANEL -->
+
+</div>
+
+<script>
+  function showPanel(id) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    event.target.classList.add('active');
+  }
+
+  function copyMsg(btn, msgId) {
+    const text = document.getElementById(msgId).innerText;
+    navigator.clipboard.writeText(text).then(() => {
+      btn.textContent = 'Copied';
+      btn.classList.add('copied');
+      setTimeout(() => {
+        btn.textContent = 'Copy';
+        btn.classList.remove('copied');
+      }, 2000);
+    });
+  }
+</script>
+
+</body>
+</html>
